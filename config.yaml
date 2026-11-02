@@ -1,0 +1,55 @@
+# ============================================================
+# Configuração do Pipeline ETL
+# ============================================================
+
+paths:
+  raw: "data/raw"
+  processed: "data/processed"
+  consolidated: "data/consolidated"
+  logs: "logs"
+
+# Extensões suportadas
+supported_extensions:
+  - .csv
+  - .xlsx
+  - .xls
+
+# Parâmetros de leitura
+read_options:
+  csv:
+    encoding: "utf-8"          # tenta utf-8, latin1 e cp1252 automaticamente se falhar
+    sep: ","                   # separador padrão (detecta automaticamente se necessário)
+    decimal: "."
+  excel:
+    engine: "openpyxl"         # openpyxl para .xlsx | xlrd para .xls antigos
+
+# Regras de limpeza
+cleaning:
+  remove_duplicates: true
+  drop_completely_empty_rows: true
+  drop_completely_empty_columns: true
+  strip_strings: true
+  replace_empty_with_nan: true
+  standardize_column_names: true   # minúsculas + underscore + remove acentos
+  fillna_strategy: null            # null | "ffill" | "bfill" | valor fixo (ex: 0)
+
+# Padronização de tipos (opcional)
+# Exemplo de uso:
+# type_casting:
+#   data_venda: "datetime"
+#   valor: "float"
+#   quantidade: "int"
+type_casting: {}
+
+# Consolidação
+consolidation:
+  enabled: true
+  output_filename: "dados_consolidados"
+  output_format: "both"            # csv | xlsx | both
+  add_source_column: true          # adiciona coluna com nome do arquivo de origem
+  sort_by: null                    # coluna para ordenar (ex: "data")
+
+# Logging
+logging:
+  level: "INFO"                    # DEBUG | INFO | WARNING | ERROR
+  save_to_file: true
